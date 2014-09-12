@@ -24,15 +24,12 @@
           cursor: pointer;
           display: inline-block;
           width: 100%;
-          background-color: {{bgcolor}};
-          padding: 7px 7px 9px 7px;
+          padding: 8px 7px 8px 7px;
           box-sizing: border-box;
-          margin-top: 1px;
-
+          margin-top: 1px 0px;
         }
 
         .leadin {
-          
           display: -webkit-box;
           -webkit-box-orient: vertical;    
           -webkit-line-clamp: 2;
@@ -44,19 +41,24 @@
           -moz-background-size: cover;
           -o-background-size: cover;
           background-size: cover;
-          width: 35%;
-          height: 85px;
+          width: 28%;
+          height: 75px;
           display: inline-block;
           float: left;
         }
 
         .title-container {
-          width: 62%;
+          width: 65%;
           margin-left: 3%;
           display: inline-block;
-          float: right;
+          float: left;
+        }
 
-
+        .full-title-container {
+          height: 75px;
+          width: 97%;
+          display: inline-block;
+          float: left;
         }
 
         .story-title {
@@ -67,6 +69,20 @@
           overflow: hidden;  
         }
 
+        .faded {
+          opacity: 0.5;
+          filter: alpha(opacity=50);
+          -moz-opacity:0.5;
+          -khtml-opacity: 0.5;
+        }
+
+        span {
+          position: absolute;
+          right: 8px;
+          top: 40%;
+          font-size: 0.8em;
+        }
+
       </style>
       <core-ajax id="parse"
         url={{requestUrl}}
@@ -75,17 +91,31 @@
       </core-ajax>
 
       <th-firebase id="firebase" directory="stories/"></th-firebase>
-
       <template if="{{storytitle}}">
-          <li class="story-link" style="width: {{width}}px;" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touchend="{{mobileTap}}"> 
-            <div class="layer">
-            
-            <div class="photo-container" style="background: url({{image}}) center center no-repeat; background-size: cover;"></div>
-            <div class="title-container">
-              <div class="leadin subpoint"><content></content></div>
-              <p class="story-title">{{storytitle}}</p>
-            </div>
-            </div>
+          <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touchend="{{mobileTap}}"> 
+
+            <!-- Story with image and title -->
+            <template if="{{image}}">
+              <div class="photo-container" style="background: url({{image}}) center center no-repeat; background-size: cover;"></div>
+              <div class="title-container">
+                <div class="leadin subpoint"><content></content></div>
+                <p class="story-title">{{storytitle}}</p>
+              </div>
+            </template>
+
+            <!-- Story with just title, and no image -->
+            <template if="{{!image}}">
+              <div class="full-title-container">
+                <div class="leadin subpoint"><content></content></div>
+                <p class="story-title">{{storytitle}}</p>
+              </div>
+            </template>
+
+            <!-- Selected marker shown when clicked --> 
+            <template if="{{selected}}">
+                <span>||</span>
+            </template>
+
           </li>
       </template>
   </template>
@@ -192,10 +222,34 @@
         tapRelease: function(e){
           var self = this,
               holdTime = e.timeStamp - self.timeDown;
-          if (holdTime < 400){ window.open(self.url, '_blank');}
+          if (holdTime < 400 && self.selected){ window.open(self.url, '_blank');}
+          self.selectStory();
         },
         mobileTap: function(e){
-          window.open(this.url, '_blank');
+          if (self.selected) {window.open(this.url, '_blank');}
+          self.selectStory();
+        },
+        selectStory: function(){
+          var self = this,
+              selectedIndex = self.id,
+              stories = self.parentNode.querySelectorAll('th-story-link');
+
+          self.selected = true;
+
+          for (var i=0; i<stories.length; i++){
+            var storyClasses = stories[i].shadowRoot.querySelector('li').classList;
+            if (stories[i].id == selectedIndex){
+              storyClasses.remove("faded");
+            } else {
+              storyClasses.add("faded");
+              stories[i].selected = false;
+            }
+          }
+        },
+        reset: function(){
+          var self = this;
+          self.selected = false;
+          self.shadowRoot.querySelector('li').classList.remove('faded');
         }
       });
 

@@ -3,13 +3,12 @@
 <link rel="import" href="../core-ajax/core-ajax.html">
 <link rel="import" href="../th-firebase/th-firebase.html">
 
-
-<polymer-element name="th-story-link" attributes="width url storytitle image themecolor">
+<polymer-element name="th-story-link" attributes="width url storytitle image bgColor">
   <template>
       <core-style ref="theme"></core-style>
       <style>
         :host{
-          width: {{width + "px"}}
+          width: {{width + "px"}};
         }
 
         a {
@@ -20,47 +19,66 @@
           list-style: none;
           font-size: 0.8em;
           font-weight: 300;
+          cursor: pointer;
+          display: inline-block;
+          width: 100%;
+          padding: 8px 7px 8px 7px;
+          box-sizing: border-box;
+          margin-top: 1px 0px;
+        }
+
+        .leadin {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;    
+          -webkit-line-clamp: 2;
+          overflow: hidden; 
+        }
+
+        .photo-container {
           -webkit-background-size: cover;
           -moz-background-size: cover;
           -o-background-size: cover;
           background-size: cover;
-          color: {{color}};
-          border-bottom: 4px solid {{bordercolor}};
-          cursor: pointer;
-         }
-
-        .layer {
-          background-color: {{bgcolor}};
-          width: 100%;
-          height: 100%;
-          padding: 8px;
-          box-sizing: border-box;
+          width: 28%;
+          height: 75px;
+          display: inline-block;
+          float: left;
         }
 
-        .title {
-          margin: 4px 0px 0px 0px;
+        .title-container {
+          width: 65%;
+          margin-left: 3%;
+          display: inline-block;
+          float: left;
+        }
+
+        .full-title-container {
+          height: 75px;
+          width: 97%;
+          display: inline-block;
+          float: left;
+        }
+
+        .story-title {
+          margin: 5px 0px 0px 0px;
           display: -webkit-box;
           -webkit-box-orient: vertical;    
-          -webkit-line-clamp: 2;
-          overflow: hidden;        
+          -webkit-line-clamp: 3;
+          overflow: hidden;  
         }
 
-        .favicon {
-          display: inline-block;
+        .faded {
+          opacity: 0.5;
+          filter: alpha(opacity=50);
+          -moz-opacity:0.5;
+          -khtml-opacity: 0.5;
+        }
+
+        span {
           position: absolute;
-          bottom: 7px;
-          right: 5px;
-          width: 16px;
-          height: 16px;
-          border-radius: 8px;
-          text-align: center;
-          padding-top: 0.15em;
-          box-sizing: border-box;
-          background-color: {{bordercolor}};
-        }
-
-        .favicon:before {
-          content: "\0074"; /* replace with correct thelma unicode symbol */
+          right: 8px;
+          top: 40%;
+          font-size: 0.8em;
         }
 
       </style>
@@ -71,18 +89,31 @@
       </core-ajax>
 
       <th-firebase id="firebase" directory="stories/"></th-firebase>
-
-      <!-- DON'T KNOW WHY BUT IF THIS IS NOT HERE, IT BREAKS -->
-      <div style="display:none;">{{image}}</div>
-      <!-- -->
-
       <template if="{{storytitle}}">
-          <li style="background: url({{image}}) center center no-repeat; background-size: cover; border-bottom: 4px solid {{bordercolor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touchend="{{mobileTap}}"> 
-            <div class="layer" style="background-color: {{bgcolor}}">
-              <content></content>
-              <p class="title headline">{{storytitle}}</p>
-              <template if={{thelma}}> <span class="favicon"></span> </template>
-            </div>
+          <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touchend="{{mobileTap}}"> 
+
+            <!-- Story with image and title -->
+            <template if="{{image}}">
+              <div class="photo-container" style="background: url({{image}}) center center no-repeat; background-size: cover;"></div>
+              <div class="title-container">
+                <div class="leadin subpoint"><content></content></div>
+                <p class="story-title">{{storytitle}}</p>
+              </div>
+            </template>
+
+            <!-- Story with just title, and no image -->
+            <template if="{{!image}}">
+              <div class="full-title-container">
+                <div class="leadin subpoint"><content></content></div>
+                <p class="story-title">{{storytitle}}</p>
+              </div>
+            </template>
+
+            <!-- Selected marker shown when clicked --> 
+            <template if="{{selected}}">
+                <span>||</span>
+            </template>
+
           </li>
       </template>
   </template>
@@ -107,12 +138,6 @@
          
           // Check if it's a thelma story for favicon
           self.thelma = /.*thelma.*/.test(self.url);
-          console.log(self.thelma);
-
-          // Set styles based on light or dark theme
-          self.color = self.themecolor == "light" ? "black" : "white";
-          self.bgcolor = self.themecolor == "light" ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)";
-          self.bordercolor = self.themecolor == "light" ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.5)";
 
           // Set up listeners for data events from firebase
           self.firebase.addEventListener('th-data-ready', function(response) {
@@ -195,10 +220,34 @@
         tapRelease: function(e){
           var self = this,
               holdTime = e.timeStamp - self.timeDown;
-          if (holdTime < 400){ window.open(self.url, '_blank');}
+          if (holdTime < 400 && self.selected){ window.open(self.url, '_blank');}
+          self.selectStory();
         },
         mobileTap: function(e){
-          window.open(this.url, '_blank');
+          if (self.selected) {window.open(this.url, '_blank');}
+          self.selectStory();
+        },
+        selectStory: function(){
+          var self = this,
+              selectedIndex = self.id,
+              stories = self.parentNode.querySelectorAll('th-story-link');
+
+          self.selected = true;
+
+          for (var i=0; i<stories.length; i++){
+            var storyClasses = stories[i].shadowRoot.querySelector('li').classList;
+            if (stories[i].id == selectedIndex){
+              storyClasses.remove("faded");
+            } else {
+              storyClasses.add("faded");
+              stories[i].selected = false;
+            }
+          }
+        },
+        reset: function(){
+          var self = this;
+          self.selected = false;
+          self.shadowRoot.querySelector('li').classList.remove('faded');
         }
       });
 

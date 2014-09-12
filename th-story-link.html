@@ -94,7 +94,7 @@
           <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touch="{{mobileTap}}" on-touchend="{{mobileTap}}"> 
 
             <!-- Story with image and title -->
-            <template if="{{image && image != ' '}}">
+            <template if="{{imageCheck(image)}}">
               <div class="photo-container" style="background: url({{image}}) center center no-repeat; background-size: cover;"></div>
               <div class="title-container">
                 <div class="leadin subpoint"><content></content></div>
@@ -103,7 +103,7 @@
             </template>
 
             <!-- Story with just title, and no image -->
-            <template if="{{!image || image == ' '}}">
+            <template if="{{!imageCheck(image)}}">
               <div class="full-title-container">
                 <div class="leadin subpoint"><content></content></div>
                 <p class="story-title">{{storytitle}}</p>
@@ -245,6 +245,10 @@
               stories[i].selected = false;
             }
           }
+        },
+        imageCheck: function(value){
+          var imageRegex = /^https?:\/\/(?:[a-z\-]+\.)+[a-z]{2,6}(?:\/[^\/#?]+)+\.(?:jpe?g|gif|png)$/;
+          return imageRegex.test(value);
         },
         reset: function(){
           var self = this;

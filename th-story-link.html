@@ -43,6 +43,7 @@
           height: 75px;
           display: inline-block;
           float: left;
+          box-sizing: border-box;
         }
 
         .title-container {
@@ -74,7 +75,7 @@
           -khtml-opacity: 0.5;
         }
 
-        span {
+        span.selected-story {
           position: absolute;
           right: 8px;
           top: 40%;
@@ -90,7 +91,7 @@
 
       <th-firebase id="firebase" directory="stories/"></th-firebase>
       <template if="{{storytitle}}">
-          <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touchend="{{mobileTap}}"> 
+          <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touch="{{mobileTap}}" on-touchend="{{mobileTap}}"> 
 
             <!-- Story with image and title -->
             <template if="{{image}}">
@@ -111,7 +112,7 @@
 
             <!-- Selected marker shown when clicked --> 
             <template if="{{selected}}">
-                <span>||</span>
+                <span class="selected-story">||</span>
             </template>
 
           </li>

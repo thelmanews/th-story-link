@@ -94,7 +94,7 @@
           <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touch="{{mobileTap}}" on-touchend="{{mobileTap}}"> 
 
             <!-- Story with image and title -->
-            <template if="{{image}}">
+            <template if="{{image && image != ' '}}">
               <div class="photo-container" style="background: url({{image}}) center center no-repeat; background-size: cover;"></div>
               <div class="title-container">
                 <div class="leadin subpoint"><content></content></div>
@@ -103,7 +103,7 @@
             </template>
 
             <!-- Story with just title, and no image -->
-            <template if="{{!image}}">
+            <template if="{{!image || image == ' '}}">
               <div class="full-title-container">
                 <div class="leadin subpoint"><content></content></div>
                 <p class="story-title">{{storytitle}}</p>

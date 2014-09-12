@@ -247,7 +247,7 @@
           }
         },
         imageCheck: function(value){
-          var imageRegex = /^https?:\/\/(?:[a-z\-]+\.)+[a-z]{2,6}(?:\/[^\/#?]+)+\.(?:jpe?g|gif|png)$/;
+          var imageRegex = /^https?:\/\/.*(?:jpe?g|gif|png)$/;
           return imageRegex.test(value);
         },
         reset: function(){

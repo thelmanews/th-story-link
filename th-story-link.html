@@ -68,7 +68,7 @@
           overflow: hidden;  
         }
 
-        .faded {
+        .faded > *{
           opacity: 0.5;
           filter: alpha(opacity=50);
           -moz-opacity:0.5;
@@ -91,8 +91,8 @@
 
       <th-firebase id="firebase" directory="stories/"></th-firebase>
       <template if="{{storytitle}}">
-          <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}" on-touch="{{mobileTap}}" on-touchend="{{mobileTap}}"> 
-
+          <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-down="{{tapDown}}" on-up="{{tapRelease}}"> 
+          
             <!-- Story with image and title -->
             <template if="{{imageCheck(image)}}">
               <div class="photo-container" style="background: url({{image}}) center center no-repeat; background-size: cover;"></div>
@@ -217,12 +217,13 @@
         tapDown: function(e){
           var self = this;
           self.timeDown = e.timeStamp;
+          self.selectStory();
         },
         tapRelease: function(e){
           var self = this,
               holdTime = e.timeStamp - self.timeDown;
           if (holdTime < 400 && self.selected){ window.open(self.url, '_blank');}
-          self.selectStory();
+          self.selected = true;
         },
         mobileTap: function(e){
           var self = this;
@@ -234,7 +235,7 @@
               selectedIndex = self.id,
               stories = self.parentNode.querySelectorAll('th-story-link');
 
-          self.selected = true;
+          
 
           for (var i=0; i<stories.length; i++){
             var storyClasses = stories[i].shadowRoot.querySelector('li').classList;

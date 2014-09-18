@@ -250,7 +250,7 @@
         },
         imageCheck: function(value){
           var imageRegex = /^https?:\/\/.*(?:jpe?g|gif|png)$/;
-          return imageRegex.test(value);
+          return imageRegex.test(value.toLowerCase());
         },
         reset: function(){
           var self = this;

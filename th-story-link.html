@@ -91,7 +91,7 @@
 
       <th-firebase id="firebase" directory="stories/"></th-firebase>
       <template if="{{storytitle}}">
-          <li class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-hold="{{tapDown}}" on-down="{{tapDown}}" on-up="{{tapRelease}}"> 
+          <li touch-action="auto" class="story-link selected" style="width: {{width}}px; background-color: {{bgColor}};" on-hold="{{tapDown}}" on-down="{{tapDown}}" on-up="{{tapRelease}}"> 
           
             <!-- Story with image and title -->
             <template if="{{imageCheck(image)}}">

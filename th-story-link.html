@@ -256,6 +256,14 @@
           var self = this;
           self.selected = false;
           self.shadowRoot.querySelector('li').classList.remove('faded');
+        },
+        storytitleChanged: function(){
+          this.storytitle = this.storytitle.replace("&#x27;","'");
+          this.storytitle = this.storytitle.replace("&amp;","&");
+        },
+        textContentChanged: function(){
+          this.textContent = this.textContent.replace("&#x27;","'");
+          this.textContent = this.textContent.replace("&amp;","&");
         }
       });
 

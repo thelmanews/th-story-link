@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer.html">
+  <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../th-animated/th-animated.html">
 <link rel="import" href="../core-ajax/core-ajax.html">
 <link rel="import" href="../th-firebase/th-firebase.html">
@@ -217,14 +217,15 @@
         // Use tap events to prevent navigating to links on hold event (preventing default for hold event does not work).
         tapDown: function(e){
           var self = this;
+          self.selected = true;
           self.timeDown = e.timeStamp;
           self.selectStory();
+
         },
         tapRelease: function(e){
           var self = this,
               holdTime = e.timeStamp - self.timeDown;
-          if (holdTime < 400 && self.selected){ window.open(self.url, '_blank');}
-          self.selected = true;
+          if (holdTime < 100 && self.selected){ window.open(self.url, '_blank');}
         },
         mobileTap: function(e){
           var self = this;
@@ -235,9 +236,7 @@
           var self = this,
               selectedIndex = self.id,
               stories = self.parentNode.querySelectorAll('th-story-link');
-
-          
-
+              
           for (var i=0; i<stories.length; i++){
             var storyClasses = stories[i].shadowRoot.querySelector('li').classList;
             if (stories[i].id == selectedIndex){

@@ -1,4 +1,4 @@
-  <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../th-animated/th-animated.html">
 <link rel="import" href="../core-ajax/core-ajax.html">
 <link rel="import" href="../th-firebase/th-firebase.html">
@@ -236,7 +236,7 @@
           var self = this,
               selectedIndex = self.id,
               stories = self.parentNode.querySelectorAll('th-story-link');
-              
+
           for (var i=0; i<stories.length; i++){
             var storyClasses = stories[i].shadowRoot.querySelector('li').classList;
             if (stories[i].id == selectedIndex){

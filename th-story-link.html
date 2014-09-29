@@ -257,12 +257,16 @@
           self.shadowRoot.querySelector('li').classList.remove('faded');
         },
         storytitleChanged: function(){
-          this.storytitle = this.storytitle.replace("&#x27;","'");
-          this.storytitle = this.storytitle.replace("&amp;","&");
+          if (this.storytitle){
+            this.storytitle = this.storytitle.replace("&#x27;","'");
+            this.storytitle = this.storytitle.replace("&amp;","&");
+          }
         },
         textContentChanged: function(){
-          this.textContent = this.textContent.replace("&#x27;","'");
-          this.textContent = this.textContent.replace("&amp;","&");
+          if (this.textContent){
+            this.textContent = this.textContent.replace("&#x27;","'");
+            this.textContent = this.textContent.replace("&amp;","&");
+          }
         }
       });
 

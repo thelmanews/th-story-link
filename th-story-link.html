@@ -225,11 +225,11 @@
         tapRelease: function(e){
           var self = this,
               holdTime = e.timeStamp - self.timeDown;
-          if (holdTime < 100 && self.selected){ window.open(self.url, '_blank');}
+          if (holdTime < 100 && self.selected){ window.open(self.url);}
         },
         mobileTap: function(e){
           var self = this;
-          if (self.selected) {window.open(this.url, '_blank');}
+          if (self.selected) {window.open(this.url);}
           self.selectStory();
         },
         selectStory: function(){

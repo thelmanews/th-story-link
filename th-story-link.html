@@ -249,8 +249,7 @@
           }
         },
         imageCheck: function(value){
-          var imageRegex = /^https?:\/\/.*(?:jpe?g|gif|png)$/;
-          return value;
+          var imageRegex = /.*(?:jpe?g|gif|png|jpeg|jpg)$/;
           return value ? imageRegex.test(value.toLowerCase()) : null;
         },
         reset: function(){

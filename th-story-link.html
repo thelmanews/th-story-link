@@ -128,7 +128,7 @@
           self.requestUrl = self.url.replace(/(ftp|http|https):\/\//,'http://www.corsproxy.com/');
           self.firebase = this.$.firebase;
           self.requests = 0;
-          
+          self.mobile = window.matchMedia("(max-width: 500px)").matches;
           // Create unique hash for each URL as a reference to saved object
           self.hash = 0;
           var i, chr, len;
@@ -226,12 +226,13 @@
         tapRelease: function(e){
           var self = this,
               holdTime = e.timeStamp - self.timeDown;
-          if (holdTime < 100 && self.selected){ window.open(self.url,"_self");}
-        },
-        mobileTap: function(e){
-          var self = this;
-          if (self.selected) {window.open(this.url,"_self");}
-          self.selectStory();
+          if (holdTime < 100 && self.selected){ 
+            if (self.mobile){
+              window.open(self.url,"_self");
+            } else {
+              window.open(self.url,"_blank");
+            }
+          }
         },
         selectStory: function(){
           var self = this,

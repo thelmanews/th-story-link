@@ -226,7 +226,7 @@
         tapRelease: function(e){
           var self = this,
               holdTime = e.timeStamp - self.timeDown;
-          if (holdTime < 100 && self.selected){ 
+          if (holdTime < 300 && self.selected){ 
             if (self.mobile){
               window.open(self.url,"_self");
             } else {
